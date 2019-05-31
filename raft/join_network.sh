@@ -300,19 +300,19 @@ function main(){
 
     if [ -z "$NETWORK_NON_INTERACTIVE" ]; then
         getInputWithDefault 'Please enter network id' 1101 chainId $BLUE
-        getInputWithDefault 'Please enter node name' "" nodeName $GREEN
+        getInputWithDefault 'Please enter node name' "" mNode $BLUE
         getInputWithDefault 'Please enter node type permissioned y/n' "y" nodeType $GREEN
-        getInputWithDefault 'Please enter IP Address of main node' "127.0.0.1" pMainIp $RED
-        getInputWithDefault 'Please enter Port of main node' 22000 pMainPort $GREEN
-        getInputWithDefault 'Please enter IP Address of this node' "127.0.0.1" pCurrentIp $RED
-        getInputWithDefault 'Please enter RPC Port of this node' 22000 rPort $GREEN
+        getInputWithDefault 'Please enter IP Address of main node' "127.0.0.1" pMainIp $PINK
+        getInputWithDefault 'Please enter Port of main node' 22000 pMainPort $PINK
+        getInputWithDefault 'Please enter IP Address of this node' "127.0.0.1" pCurrentIp $ORANGE
+        getInputWithDefault 'Please enter RPC Port of this node' 22000 rPort $ORANGE
         getInputWithDefault 'Please enter Network Listening Port of this node' $((rPort+1)) wPort $GREEN
         getInputWithDefault 'Please enter Tessera Port of this node' $((wPort+1)) tPort $GREEN
         getInputWithDefault 'Please enter Tessera debug Port of this node' $((tPort+1)) dPort $GREEN
         getInputWithDefault 'Please enter Raft Port of this node' $((dPort+1)) raPort $PINK
         getInputWithDefault 'Please enter WS Port of this node' $((raPort+1)) wsPort $GREEN
     fi
-    mNode="$nodeName"
+
     cleanup
     generateKeyPair
     createAccount

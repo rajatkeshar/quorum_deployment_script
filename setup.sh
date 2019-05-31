@@ -5,7 +5,7 @@ source variables
 source common.sh
 
 function call() {
-	
+
 	if [[ "$consensus" == "raft" ]]
 		then
 			raft/menu.sh $@
@@ -20,6 +20,11 @@ function call() {
 	then
 			ibft/menu.sh $@
 	fi
+}
+
+function init() {
+
+	echo -e $WHITE'\nStart deployment quorum Network, Built on version 2.2.1\n'
 }
 
 function networkReadParameters(){
@@ -51,11 +56,12 @@ function networkReadParameters(){
 
 function networkReadInputs(){
     if [[ -z "$NETWORK_NON_INTERACTIVE" ]]; then
-			  getInputWithDefault 'Select consensus type (raft/ibft/POA) ' "" consensus $GREEN
+			  getInputWithDefault 'Select consensus type (raft/ibft/POA) ' "" consensus $BLUE
     fi
 }
 
 main(){
+		init
     networkReadParameters $@
     networkReadInputs
     call $@

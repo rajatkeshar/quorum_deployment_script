@@ -4,11 +4,6 @@
 source variables
 source raft/common.sh
 
-function init() {
-
-	echo -e $GREEN'Start deployment quorum Network, Built on version 2.2.1\n'
-}
-
 function networkReadParameters() {
     POSITIONAL=()
     while [[ $# -gt 0 ]]
@@ -46,15 +41,13 @@ function networkReadParameters() {
 
 function main() {
 
-	init
-
 	networkReadParameters $@
 
 	if [ -z "$NETWORK_NON_INTERACTIVE" ]; then
 		flagmain=true
 		echo -e $YELLOW'Please select an option: \n' \
 				$GREEN'1) Create Network \n' \
-				$PINK'2) Join Network \n'
+				$PINK'2) Join existing Network \n'
 
 		printf $WHITE'option: '$COLOR_END
 
@@ -67,16 +60,14 @@ function main() {
 		1)
       echo -e $YELLOW'Creating your Raft network \n'
 			raft/create_network.sh
-			cd ${nodeName}/
-			$@;;
-			#./node_start.sh
+			cd $(cat .nodename)
+			./node_start.sh $@;;
 			#tail -f /dev/null $@;;
 		2)
       echo -e $YELLOW'joining to the existing network \n'
 			raft/join_network.sh
-			cd ${nodeName}/
-			$@;;
-			#./node_start.sh
+			cd $(cat .nodename)
+			./node_start.sh $@;;
 			#tail -f /dev/null $@;;
 		*)
 			echo -e $RED'Please enter a valid option'	;;
