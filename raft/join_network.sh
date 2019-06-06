@@ -301,7 +301,7 @@ function main(){
     if [ -z "$NETWORK_NON_INTERACTIVE" ]; then
         getInputWithDefault 'Please enter network id' 1101 chainId $BLUE
         getInputWithDefault 'Please enter node name' "" mNode $BLUE
-        getInputWithDefault 'Please enter node type permissioned y/n' "y" nodeType $GREEN
+        #getInputWithDefault 'Please enter node type permissioned y/n' "y" nodeType $GREEN
         getInputWithDefault 'Please enter IP Address of main node' "127.0.0.1" pMainIp $PINK
         getInputWithDefault 'Please enter Port of main node' 22000 pMainPort $PINK
         getInputWithDefault 'Please enter IP Address of this node' "127.0.0.1" pCurrentIp $ORANGE

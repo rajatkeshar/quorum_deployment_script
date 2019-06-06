@@ -232,7 +232,7 @@ function main(){
     if [ -z "$NETWORK_NON_INTERACTIVE" ]; then
         getInputWithDefault 'Please enter network id' 1101 chainId $BLUE
         getInputWithDefault 'Please enter node name' "" mNode $BLUE
-        getInputWithDefault 'Please enter node type permissioned y/n' "y" nodeType $GREEN
+        #getInputWithDefault 'Please enter node type permissioned y/n' "y" nodeType $GREEN
         getInputWithDefault 'Please enter IP Address of this node' "127.0.0.1" pCurrentIp $PINK
         getInputWithDefault 'Please enter RPC Port of this node' 22000 rPort $PINK
         getInputWithDefault 'Please enter Network Listening Port of this node' $((rPort+1)) wPort $GREEN
