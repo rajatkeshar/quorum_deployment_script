@@ -60,7 +60,7 @@ function install_tessera(){
 
 function install_go(){
     # install golang
-    GOREL=go1.11.1.linux-amd64.tar.gz
+    GOREL=go1.9.7.linux-amd64.tar.gz
     wget -q https://dl.google.com/go/$GOREL
     tar xfz $GOREL
     sudo mv go /usr/local/go
@@ -73,7 +73,7 @@ function install_go(){
     source ~/.bashrc
 }
 
-function install_testnet(){
+function install_quorum(){
     # make/install testnet
     git clone https://github.com/jpmorganchase/quorum.git
     pushd quorum >/dev/null
@@ -95,7 +95,7 @@ function main(){
     #pack
     install_tessera
     install_go
-    install_testnet
+    install_quorum
     install_porosity
 
     echo -n "Do you want to download ipfs (y/n)? "
