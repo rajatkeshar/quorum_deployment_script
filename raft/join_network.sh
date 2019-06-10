@@ -207,6 +207,7 @@ function createPermissionedJsonFile() {
     rm temp.json
     rm p1.txt
 }
+
 function networkReadParameters() {
   POSITIONAL=()
   while [[ $# -gt 0 ]]
