@@ -27,7 +27,7 @@ function copyScripts(){
     cp ../../template/tessera_start_template.sh ../tessera_start.sh
     cp ../../template/node_start_template_raft.sh ../node_start.sh
 
-    echo ${password} > ../password.txt
+    echo ${wPassword} > ../password.txt
 
     sed -i "s/#DPORT/${dPort}/g" ../tessera_start.sh
     sed -i "s/#NODE/'${mNode}'/g" ../tessera_start.sh
@@ -123,7 +123,7 @@ function createAccount(){
     # import the private key to geth and create a account
     current_pwd=$(pwd)
 
-    acc_address="$(geth account import --datadir ${current_pwd} --password  <(echo $password) priv)"
+    acc_address="$(geth account import --datadir ${current_pwd} --password  <(echo $wPassword) priv)"
     re="\{([^}]+)\}"
 
     if [[ $acc_address =~ $re ]];
@@ -221,6 +221,11 @@ function networkReadParameters() {
           shift # past argument
           shift # past value
           ;;
+          --pw)
+          wPassword="$2"
+          shift # past argument
+          shift # past value
+          ;;
           --ni|--id)
           chainId="$2"
           shift # past argument
@@ -284,11 +289,11 @@ function networkReadParameters() {
   done
   set -- "${POSITIONAL[@]}" # restore positional parameters
 
-  if [[ -z "$mNode" && -z "$chainId" && -z "$nodeType" && -z "$pCurrentIp" && -z "$pMainIp" && -z "$pMainPort" && -z "$rPort" && -z "$wPort" && -z "$tPort" && -z "$raPort" && -z "$dPort" && -z "$wsPort" && -z "$networkName" ]]; then
+  if [[ -z "$mNode" && -z "$wPassword" && -z "$chainId" && -z "$nodeType" && -z "$pCurrentIp" && -z "$pMainIp" && -z "$pMainPort" && -z "$rPort" && -z "$wPort" && -z "$tPort" && -z "$raPort" && -z "$dPort" && -z "$wsPort" && -z "$networkName" ]]; then
       return
   fi
 
-  if [[ -z "$mNode" || -z "$chainId" || -z "$nodeType" || -z "$pCurrentIp" || -z "$pMainIp" || -z "$pMainPort" || -z "$rPort" || -z "$wPort" || -z "$tPort" || -z "$raPort" || -z "$dPort" || -z "$wsPort" || -z "$networkName" ]]; then
+  if [[ -z "$mNode" || -z "$wPassword" || -z "$chainId" || -z "$nodeType" || -z "$pCurrentIp" || -z "$pMainIp" || -z "$pMainPort" || -z "$rPort" || -z "$wPort" || -z "$tPort" || -z "$raPort" || -z "$dPort" || -z "$wsPort" || -z "$networkName" ]]; then
       help
   fi
 
@@ -302,6 +307,7 @@ function main(){
     if [ -z "$NETWORK_NON_INTERACTIVE" ]; then
         getInputWithDefault 'Please enter network id' 1101 chainId $BLUE
         getInputWithDefault 'Please enter node name' "" mNode $BLUE
+        getInputWithDefault 'Please enter password for wallet' "" wPassword $BLUE
         #getInputWithDefault 'Please enter node type permissioned y/n' "y" nodeType $GREEN
         getInputWithDefault 'Please enter IP Address of main node' "127.0.0.1" pMainIp $PINK
         getInputWithDefault 'Please enter Port of main node' 22000 pMainPort $PINK
