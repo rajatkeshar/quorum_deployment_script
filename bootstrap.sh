@@ -37,20 +37,44 @@ function install_ipfs(){
 
 function pack(){
     # install build deps
-    sudo add-apt-repository -y ppa:ethereum/ethereum
-    sudo add-apt-repository -y ppa:webupd8team/java
     sudo apt-get update
-    # sudo add-apt-repository ppa:chris-lea/libsodium
-    #apt-get install -y build-essential unzip libdb-dev libleveldb-dev libsodium-dev zlib1g-dev libtinfo-dev solc sysvbanner wrk software-properties-common default-jdk maven
-    sudo apt-get install -y build-essential unzip libdb-dev libleveldb-dev libsodium-dev zlib1g-dev libtinfo-dev solc sysvbanner software-properties-common default-jdk maven python-pip
-
-    echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | sudo debconf-set-selections
-    sudo apt-get install -y oracle-java8-installer
-    #sudo pip install -r package.txt
+    sudo add-apt-repository -y ppa:ethereum/ethereum
+    sudo apt-get install -y software-properties-common 
+    sudo apt-get install -y build-essential
+    sudo apt-get install -y unzip 
+    sudo apt-get install -y libdb-dev
+    sudo apt-get install -y libleveldb-dev 
+    sudo apt-get install -y libsodium-dev 
+    sudo apt-get install -y zlib1g-dev 
+    sudo apt-get install -y libtinfo-dev 
+    sudo apt-get install -y solc 
+    sudo apt-get install -y sysvbanner 
+    sudo apt-get install -y maven 
+    sudo apt-get install -y python-pip
 }
+
+function install_java(){
+    sudo mkdir -p /usr/local/java
+    dir=$(pwd)
+    sudo cp jre-8u211-linux-x64.tar.gz /usr/local/java/
+    cd /usr/local/java/
+    sudo tar xzvf jre-8u211-linux-x64.tar.gz
+    sudo update-alternatives --install "/usr/bin/java" "java" "/usr/local/java/jre1.8.0_211/bin/java" 1 
+    sudo update-alternatives --install "/usr/bin/javaws" "javaws" "/usr/local/java/jre1.8.0_211/bin/javaws" 1 
+    sudo update-alternatives --set java /usr/local/java/jre1.8.0_211/bin/java
+    sudo update-alternatives --set javaws /usr/local/java/jre1.8.0_211/bin/javaws
+    export JAVA_HOME=/usr/local/java/jre1.8.0_211
+    export PATH=$JAVA_HOME/bin:$PATH
+    echo 'export JAVA_HOME=/usr/local/java/jre1.8.0_211' >> ~/.bashrc
+    echo "export PATH=$JAVA_HOME/bin:$PATH" >> ~/.bashrc
+    cd ${dir}
+    echo ${dir}
+    
+}
+
 function install_tessera(){
     wget -q https://github.com/jpmorganchase/tessera/releases/download/tessera-0.6/tessera-app-0.6-app.jar
-    sudo cp ./tessera-app-0.6-app.jar ${PWD}/tessera/tessera.jar
+    sudo mv ./tessera-app-0.6-app.jar ${PWD}/tessera/tessera.jar
     echo "export  TESSERA_JAR=${PWD}/tessera/tessera.jar" >> ~/.profile
     echo "export TESSERA_JAR=${PWD}/tessera/tessera.jar" >> ~/.bashrc
     export TESSERA_JAR=${PWD}"/tessera/tessera.jar"
@@ -83,6 +107,7 @@ function install_quorum(){
     sudo cp build/bin/bootnode /usr/local/bin
     sudo cp build/bin/ibftUtils /usr/local/bin
     popd >/dev/null
+    rm -rf quorum
 }
 
 function install_porosity(){
@@ -92,7 +117,8 @@ function install_porosity(){
 }
 
 function main(){
-    #pack
+    pack
+    install_java
     install_tessera
     install_go
     install_quorum
@@ -108,7 +134,7 @@ function main(){
     fi
 
     # done!
-    banner "Quorum 2.2.1"
+    banner "Done"
     echo
 }
 
