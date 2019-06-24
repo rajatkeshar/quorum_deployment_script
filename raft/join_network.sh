@@ -289,11 +289,11 @@ function networkReadParameters() {
   done
   set -- "${POSITIONAL[@]}" # restore positional parameters
 
-  if [[ -z "$mNode" && -z "$wPassword" && -z "$chainId" && -z "$nodeType" && -z "$pCurrentIp" && -z "$pMainIp" && -z "$pMainPort" && -z "$rPort" && -z "$wPort" && -z "$tPort" && -z "$raPort" && -z "$dPort" && -z "$wsPort" && -z "$networkName" ]]; then
+  if [[ -z "$mNode" && -z "$wPassword" && -z "$chainId" && -z "$pCurrentIp" && -z "$pMainIp" && -z "$pMainPort" && -z "$rPort" && -z "$wPort" && -z "$tPort" && -z "$raPort" && -z "$dPort" && -z "$wsPort" ]]; then
       return
   fi
 
-  if [[ -z "$mNode" || -z "$wPassword" || -z "$chainId" || -z "$nodeType" || -z "$pCurrentIp" || -z "$pMainIp" || -z "$pMainPort" || -z "$rPort" || -z "$wPort" || -z "$tPort" || -z "$raPort" || -z "$dPort" || -z "$wsPort" || -z "$networkName" ]]; then
+  if [[ -z "$mNode" || -z "$wPassword" || -z "$chainId" || -z "$pCurrentIp" || -z "$pMainIp" || -z "$pMainPort" || -z "$rPort" || -z "$wPort" || -z "$tPort" || -z "$raPort" || -z "$dPort" || -z "$wsPort" ]]; then
       help
   fi
 

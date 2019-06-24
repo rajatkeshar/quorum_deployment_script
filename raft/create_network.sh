@@ -219,11 +219,11 @@ function networkReadParameters() {
   done
   set -- "${POSITIONAL[@]}" # restore positional parameters
 
-  if [[ -z "$mNode" && -z "$wPassword" && -z "$chainId" && -z "$nodeType" && -z "$pCurrentIp" && -z "$rPort" && -z "$wPort" && -z "$tPort" && -z "$raPort" && -z "$dPort" && -z "$wsPort" && -z "$networkName" ]]; then
+  if [[ -z "$mNode" && -z "$wPassword" && -z "$chainId" && -z "$pCurrentIp" && -z "$rPort" && -z "$wPort" && -z "$tPort" && -z "$raPort" && -z "$dPort" && -z "$wsPort" ]]; then
       return
   fi
 
-  if [[ -z "$mNode" || -z "$wPassword" || -z "$chainId" || -z "$nodeType" || -z "$pCurrentIp" || -z "$rPort" || -z "$wPort" || -z "$tPort" || -z "$raPort" || -z "$dPort" || -z "$wsPort" || -z "$networkName" ]]; then
+  if [[ -z "$mNode" || -z "$wPassword" || -z "$chainId" || -z "$pCurrentIp" || -z "$rPort" || -z "$wPort" || -z "$tPort" || -z "$raPort" || -z "$dPort" || -z "$wsPort" ]]; then
       help
   fi
 
@@ -236,7 +236,7 @@ function main(){
 
     if [ -z "$NETWORK_NON_INTERACTIVE" ]; then
         getInputWithDefault 'Please enter network id' 1101 chainId $BLUE
-        getInputWithDefault 'Please enter node name' "" mNode $BLUE
+        getInputWithDefault 'Please enter node name' "node1" mNode $BLUE
         getInputWithDefault 'Please enter password for wallet' "" wPassword $BLUE
         #getInputWithDefault 'Please enter node type permissioned y/n' "y" nodeType $GREEN
         getInputWithDefault 'Please enter IP Address of this node' "127.0.0.1" pCurrentIp $PINK

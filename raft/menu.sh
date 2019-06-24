@@ -11,11 +11,11 @@ function networkReadParameters() {
         key="$1"
 
         case $key in
-          create)
+          --create|create)
             option="1"
             shift # past argument
             ;;
-          join)
+          --join|join)
             option="2"
             shift # past argument
             ;;
@@ -30,7 +30,7 @@ function networkReadParameters() {
     done
     set -- "${POSITIONAL[@]}" # restore positional parameters
 
-	if [[ ! -z $option && $option -lt 1 || $option -gt 4 ]]; then
+	if [[ ! -z $option && $option -lt 1 || $option -gt 2 ]]; then
 		help
 	fi
 
@@ -47,7 +47,9 @@ function main() {
 		flagmain=true
 		echo -e $YELLOW'Please select an option: \n' \
 				$GREEN'1) Create Network \n' \
-				$PINK'2) Join existing Network \n'
+				$PINK'2) Join existing Network \n' \
+				$CYAN'3) Setup Development/Test Network \n' \
+				$RED'4) Exit'
 
 		printf $WHITE'option: '$COLOR_END
 
@@ -58,17 +60,24 @@ function main() {
 
 	case $createOrJoin in
 		1)
-      echo -e $YELLOW'Creating your Raft network \n'
-			raft/create_network.sh
+      		echo -e $YELLOW'Creating your Raft network \n'
+			raft/create_network.sh $@
 			cd $(cat .nodename)
 			./node_start.sh $@;;
 			#tail -f /dev/null $@;;
 		2)
-      echo -e $YELLOW'joining to the existing network \n'
-			raft/join_network.sh
+      		echo -e $YELLOW'joining to the existing network \n'
+			raft/join_network.sh $@
 			cd $(cat .nodename)
 			./node_start.sh $@;;
 			#tail -f /dev/null $@;;
+		3)
+			echo -e $YELLOW'Creating Your Development/Test Network \n'
+			echo -e $YELLOW'Under Development \n'
+			flagmain=false	;;
+		4)
+			echo -e $YELLOW'Exit'
+			flagmain=false	;;
 		*)
 			echo -e $RED'Please enter a valid option'	;;
 	esac

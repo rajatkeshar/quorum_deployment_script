@@ -92,7 +92,6 @@ function help(){
     echo "Commands:"
     echo -e $GREEN'create'$COLOR_END    "   Create a new Node. The node hosts Quorum, Constellation and Node Manager"
     echo -e $PINK'join'$COLOR_END       "     Create a node and Join to existing Network"
-    echo -e $BLUE'attach'$COLOR_END     "   Attach to an existing Quorum Node. The node created hosts only Node Manager"
     echo -e $CYAN'dev'$COLOR_END        "      Create a development/test network with multiple nodes"
     echo ""
     echo "Options:"

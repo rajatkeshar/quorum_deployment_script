@@ -40,13 +40,18 @@ function networkReadParameters(){
             shift # past argument
             shift # past value
             ;;
+            -h|--help)
+            help
+            ;;
             *)    # unknown option
             POSITIONAL+=("$1") # save it in an array for later
             shift # past argument
             ;;
         esac
     done
-		set -- "${POSITIONAL[@]}" # restore positional parameters
+	
+    set -- "${POSITIONAL[@]}" # restore positional parameters
+    
     if [[ -z "$consensus" ]]; then
         return
     fi
