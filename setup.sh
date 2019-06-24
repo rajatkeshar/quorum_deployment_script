@@ -25,6 +25,7 @@ function call() {
 function init() {
 
 	echo -e $WHITE'\nStart deployment quorum Network, Built on version 2.2.1\n'
+    echo globalDir=$(pwd) > variables
 }
 
 function networkReadParameters(){
@@ -66,7 +67,7 @@ function networkReadInputs(){
 }
 
 main(){
-		init
+	init
     networkReadParameters $@
     networkReadInputs
     call $@

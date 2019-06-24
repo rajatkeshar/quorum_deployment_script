@@ -74,7 +74,7 @@ function main() {
 		3)
 			echo -e $YELLOW'Creating Your Development/Test Network \n'
 			echo -e $YELLOW'Under Development \n'
-			flagmain=false	;;
+			raft/create_dev_network.sh $@;;
 		4)
 			echo -e $YELLOW'Exit'
 			flagmain=false	;;
