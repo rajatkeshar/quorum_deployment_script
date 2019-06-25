@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source variables
-source raft/common.sh
+source ${globalDir}/common.sh
 
 tesseraJar=($TESSERA_JAR)
 
@@ -20,12 +20,12 @@ function generateKeyPair(){
 
 #function to create start node script with --raft flag
 function copyScripts(){
-    cp ../../template/genesis_template_raft.json ../genesis.json
+    cp ${globalDir}/template/genesis_template_raft.json ../genesis.json
     sed -i "s|#CHAIN_ID#|${chainId}|g" ../genesis.json
     #sed -i "s|#mNodeAddress#|${acc_address}|g" ../genesis.json
 
-    cp ../../template/tessera_start_template.sh ../tessera_start.sh
-    cp ../../template/node_start_template_raft.sh ../node_start.sh
+    cp ${globalDir}/template/tessera_start_template.sh ../tessera_start.sh
+    cp ${globalDir}/template/node_start_template_raft.sh ../node_start.sh
 
     echo ${wPassword} > ../password.txt
 
@@ -63,7 +63,7 @@ function generateTesseraConfig(){
     printf "\n\n" | java -jar $tesseraJar -keygen -filename $(pwd)/tesseraConfig/
     echo "mNode: " $mNode
     echo "tPort: " $tPort
-    ../../template/tessera_init_template.sh ${mNode} ${tPort}
+    ${globalDir}/template/tessera_init_template.sh ${mNode} ${tPort}
 }
 
 #create setup
@@ -99,7 +99,7 @@ function generateEnode(){
         Enode=${BASH_REMATCH[0]};
     fi
     cp nodekey geth/.
-    cp ../../template/static-nodes_template_raft.json static-nodes.json
+    cp ${globalDir}/template/static-nodes_template_raft.json static-nodes.json
     PATTERN="s|#eNode#|${Enode}|g"
     sed -i $PATTERN static-nodes.json
     PATTERN="s|#CURRENT_IP#|${pCurrentIp}|g"

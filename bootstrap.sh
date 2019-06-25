@@ -74,6 +74,7 @@ function install_java(){
 
 function install_tessera(){
     wget -q https://github.com/jpmorganchase/tessera/releases/download/tessera-0.6/tessera-app-0.6-app.jar
+    mkdir tessera
     sudo mv ./tessera-app-0.6-app.jar ${PWD}/tessera/tessera.jar
     echo "export  TESSERA_JAR=${PWD}/tessera/tessera.jar" >> ~/.profile
     echo "export TESSERA_JAR=${PWD}/tessera/tessera.jar" >> ~/.bashrc
@@ -102,10 +103,9 @@ function install_quorum(){
     git clone https://github.com/jpmorganchase/quorum.git
     pushd quorum >/dev/null
     go get github.com/urfave/cli
-    make all
+    make geth bootnode
     sudo cp build/bin/geth /usr/local/bin
     sudo cp build/bin/bootnode /usr/local/bin
-    sudo cp build/bin/ibftUtils /usr/local/bin
     popd >/dev/null
     rm -rf quorum
 }

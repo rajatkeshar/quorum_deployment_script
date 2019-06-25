@@ -2,7 +2,7 @@
 
 #Menu system for launching appropriate scripts based on user choice
 source variables
-source raft/common.sh
+source ${globalDir}/common.sh
 
 function networkReadParameters() {
     POSITIONAL=()
@@ -73,7 +73,6 @@ function main() {
 			#tail -f /dev/null $@;;
 		3)
 			echo -e $YELLOW'Creating Your Development/Test Network \n'
-			echo -e $YELLOW'Under Development \n'
 			raft/create_dev_network.sh $@;;
 		4)
 			echo -e $YELLOW'Exit'

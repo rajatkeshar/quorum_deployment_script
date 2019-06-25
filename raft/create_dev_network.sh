@@ -1,27 +1,27 @@
 source variables
-source raft/common.sh
+source ${globalDir}/common.sh
 
 function createOrJoin() {
 
     port_no=$(grep "next_port=" network.conf | awk -F = '{print $2}')
     node_no=$(grep "node_number=" network.conf | awk -F = '{print $2}')
-    echo "port_no: " $port_no
-    echo "node_no: " $node_no
-    echo "pwd: " $(pwd)
     for (( i=1; i<=$nodeCount; i++))
     do
-        ../raft/create_network.sh --id 1101 --nn "node"${node_no} --pw "node"${node_no} --ip 0.0.0.0 --r ${port_no} --w $((port_no + 1))  --t $((port_no + 2)) --dt $((port_no + 3)) --raft $((port_no + 4)) --ws $((port_no + 5))
 
-		# if [[ "node"${node_no} != "node1" || ${option} != "1" ]]
-		# then
-
-        #     sleep 10
-		# 	../raft/join_network.sh --id 1101 --nn "node"${node_no} --pw "node"${node_no} --ip 0.0.0.0 --r --mip 0.0.0.0 --mport 22000 ${port_no} --w $((port_no + 1))  --t $((port_no + 2)) --dt $((port_no + 3)) --raft $((port_no + 4)) --ws $((port_no + 5)) 
-		# else
-		# 	cd ${networkName}/qdata/"node"${node_no}
-		# 	./node_start.sh
-		# 	cd ../../../raft
-		# fi
+		if [[ "node"${node_no} != "node1" ]]
+		then
+            echo -e $CYAN"Configuring node${node_no}"$COLOR_END
+			${globalDir}/raft/join_network.sh --id 1101 --nn "node"${node_no} --pw "node"${node_no} --ip 0.0.0.0 --mip 0.0.0.0 --mport 22000 --r ${port_no} --w $((port_no + 1))  --t $((port_no + 2)) --dt $((port_no + 3)) --raft $((port_no + 4)) --ws $((port_no + 5)) 
+            cd "node"${node_no}
+            ./node_start.sh
+            cd ../
+        else
+            echo -e $CYAN"Configuring node${node_no}"$COLOR_END
+            ${globalDir}/raft/create_network.sh --id 1101 --nn "node"${node_no} --pw "node"${node_no} --ip 0.0.0.0 --r ${port_no} --w $((port_no + 1))  --t $((port_no + 2)) --dt $((port_no + 3)) --raft $((port_no + 4)) --ws $((port_no + 5))
+            cd "node"${node_no}
+            ./node_start.sh
+            cd ../
+		fi
 
         replace_port_no=$((port_no + 6))
         replace_node_no=$((node_no + 1))
