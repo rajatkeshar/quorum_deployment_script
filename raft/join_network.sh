@@ -164,18 +164,53 @@ function generateRaftId(){
     echo 'RAFT_ID='${result} >> node.conf
 
     #Add Admin Peers
+    # result=`curl -X POST "http://${pMainIp}:${pMainPort}" -H "accept: application/json" -H "Content-Type: application/json" --data "{\"jsonrpc\":\"2.0\",\"method\":\"admin_addPeer\",\"params\":[\"${nodeId}\"],\"id\":2}"`
+    # echo "result: " $result
+    # result=$(echo $result | awk -F ":|}| " '{print $4}')
+	# echo "admin_addPeer result: " $result
+
+    # if [ "$result" = true ];
+    #     then
+    #         echo "peer added successfully!"
+    #     else
+    #         echo "peer not added"
+    #         #exit 1
+    # fi
+}
+
+function addPeers(){
+
+    nodeId=`sed 's/\[\|\]\|\"'//g static-nodes.json`
+    echo ${nodeId} 
+
     result=`curl -X POST "http://${pMainIp}:${pMainPort}" -H "accept: application/json" -H "Content-Type: application/json" --data "{\"jsonrpc\":\"2.0\",\"method\":\"admin_addPeer\",\"params\":[\"${nodeId}\"],\"id\":2}"`
     echo "result: " $result
     result=$(echo $result | awk -F ":|}| " '{print $4}')
 	echo "admin_addPeer result: " $result
-
+    
     if [ "$result" = true ];
         then
             echo "peer added successfully!"
-        else
+        else 
             echo "peer not added"
             #exit 1
     fi
+    sleep 5
+    result=`curl -X POST "http://${pMainIp}:${pMainPort}" -H "accept: application/json" -H "Content-Type: application/json" --data "{\"jsonrpc\":\"2.0\",\"method\":\"admin_peers\",\"params\":[],\"id\":2}"`
+    echo $result | jq '.result'>temp.json
+    echo $result
+    jq -c '.[]' temp.json | while read i; do
+        network=$( echo $i | jq -r '.network' )
+        ip=$( echo $network | jq -r '.remoteAddress' )
+        IFS=':' read -r -a array <<<$ip
+        echo "remoteAddress: " ${array[0]}
+        result=`curl -X POST "http://${array[0]}:${pMainPort}" -H "accept: application/json" -H "Content-Type: application/json" --data "{\"jsonrpc\":\"2.0\",\"method\":\"admin_addPeer\",\"params\":[\"${nodeId}\"],\"id\":2}"`
+        echo "result: " $result
+        result=$(echo $result | awk -F ":|}| " '{print $4}')
+        echo "admin_addPeer result: " $result
+    done
+
+    rm temp.json
 }
 
 function createPermissionedJsonFile() {
@@ -328,6 +363,7 @@ function main(){
     copyScripts
     generateTesseraConfig
     generateRaftId
+    addPeers
     #createPermissionedJsonFile
     executeInit
 }

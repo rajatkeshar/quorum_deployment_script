@@ -49,7 +49,8 @@ function pack(){
     sudo apt-get install -y libtinfo-dev 
     sudo apt-get install -y solc 
     sudo apt-get install -y sysvbanner 
-    sudo apt-get install -y maven 
+    sudo apt-get install -y maven
+    sudo apt-get install -y openjdk-8-jdk 
     sudo apt-get install -y python-pip
 }
 
