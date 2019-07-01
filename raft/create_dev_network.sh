@@ -104,11 +104,7 @@ function main(){
     echo -e $BLUE'Creating '$networkName' with '$nodeCount' nodes. Please wait... '$COLOR_END
     
     cleanup
-
     createOrJoin
-    
-    displayProgress $nodeCount 0
-
     
     echo -e $GREEN'Network '$networkName' created successfully. Check '$networkName' directory'$COLOR_END
 }

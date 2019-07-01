@@ -41,6 +41,7 @@ function pack(){
     sudo add-apt-repository -y ppa:ethereum/ethereum
     sudo apt-get install -y software-properties-common 
     sudo apt-get install -y build-essential
+    sudo apt-get install -y jq
     sudo apt-get install -y unzip 
     sudo apt-get install -y libdb-dev
     sudo apt-get install -y libleveldb-dev 
