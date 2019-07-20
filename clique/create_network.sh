@@ -83,33 +83,21 @@ function createSetupConf(){
     echo 'STATE=I' >> node.conf
 }
 
-#function to generate enode
 function generateEnode(){
     bootnode -genkey nodekey
-    nodekey=$(cat nodekey)
-	bootnode -nodekey nodekey -verbosity 9 -addr :30310 2>enode.txt &
-    pid=$!
-	sleep 5
-	kill -9 $pid
-	wait $pid 2> /dev/null
-	re="enode:.*@"
-	enode=$(cat enode.txt)
-    echo $enode
-    if [[ $enode =~ $re ]];
-    	then
-        Enode=${BASH_REMATCH[0]};
-    fi
-    cp nodekey geth/.
-    cp ../../template/static-nodes_template_clique.json static-nodes.json
+	Enode="enode://"$(bootnode -nodekey nodekey -verbosity 9 -writeaddress)"@"
+    mv nodekey geth/.
+    cp ../../template/static-nodes_template_raft.json static-nodes.json
     PATTERN="s|#eNode#|${Enode}|g"
     sed -i $PATTERN static-nodes.json
     PATTERN="s|#CURRENT_IP#|${pCurrentIp}|g"
     sed -i $PATTERN static-nodes.json
     PATTERN="s|#W_PORT#|${wPort}|g"
     sed -i $PATTERN static-nodes.json
-
-    rm enode.txt
-    rm nodekey
+    PATTERN="s|#raftPprt#|${raPort}|g"
+    sed -i $PATTERN static-nodes.json
+    peerEnode=${Enode}${pCurrentIp}":"${wPort}"?discport=0"
+    echo "peerEnode: " $peerEnode
 }
 
 #function to create node accout and append it into genesis.json file

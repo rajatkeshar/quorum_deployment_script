@@ -37,9 +37,9 @@ echo "[*] Starting Tessera nodes"
 echo "[*] Starting node with ChainID and NetworkId of $NETWORK_ID"
 set -v
 if [[ -z "$RAFT_ID" ]]; then
-    ARGS="--nodiscover --verbosity 6 --syncmode full --networkid $NETWORK_ID --raft --rpc --rpcaddr 0.0.0.0 --rpcapi raft,admin,db,eth,debug,miner,net,shh,txpool,personal,web3,quorum,raft --emitcheckpoints"
+    ARGS="--nodiscover --verbosity 6 --syncmode full --gcmode archive --networkid $NETWORK_ID --raft --rpc --rpcaddr 0.0.0.0 --rpcapi raft,admin,db,eth,debug,miner,net,shh,txpool,personal,web3,quorum,raft --emitcheckpoints"
 else
-    ARGS="--nodiscover --verbosity 6 --syncmode full --networkid $NETWORK_ID --raft --raftjoinexisting $RAFT_ID --rpc --rpcaddr 0.0.0.0 --rpcapi raft,admin,db,eth,debug,miner,net,shh,txpool,personal,web3,quorum,raft --emitcheckpoints"
+    ARGS="--nodiscover --verbosity 6 --syncmode full --gcmode archive --networkid $NETWORK_ID --raft --raftjoinexisting $RAFT_ID --rpc --rpcaddr 0.0.0.0 --rpcapi raft,admin,db,eth,debug,miner,net,shh,txpool,personal,web3,quorum,raft --emitcheckpoints"
 fi
 
 PRIVATE_CONFIG=node/tesseraConfig/tm.ipc nohup geth --datadir node $ARGS #STARTCMD --unlock 0 --password password.txt 2>>logs/${node}.log &

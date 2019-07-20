@@ -85,20 +85,8 @@ function createSetupConf(){
 #function to generate enode
 function generateEnode(){
     bootnode -genkey nodekey
-    nodekey=$(cat nodekey)
-	bootnode -nodekey nodekey -verbosity 9 -addr :30310 2>enode.txt &
-    pid=$!
-	sleep 5
-	kill -9 $pid
-	wait $pid 2> /dev/null
-	re="enode:.*@"
-	enode=$(cat enode.txt)
-    echo $enode
-    if [[ $enode =~ $re ]];
-    	then
-        Enode=${BASH_REMATCH[0]};
-    fi
-    cp nodekey geth/.
+	Enode="enode://"$(bootnode -nodekey nodekey -verbosity 9 -writeaddress)"@"
+    mv nodekey geth/.
     cp ${globalDir}/template/static-nodes_template_raft.json static-nodes.json
     PATTERN="s|#eNode#|${Enode}|g"
     sed -i $PATTERN static-nodes.json
@@ -110,10 +98,6 @@ function generateEnode(){
     sed -i $PATTERN static-nodes.json
     peerEnode=${Enode}${pCurrentIp}":"${wPort}"?discport=0"
     echo "peerEnode: " $peerEnode
-
-    #cp static-nodes.json permissioned-nodes.json
-    rm enode.txt
-    rm nodekey
 }
 
 #function to create node accout and append it into genesis.json file
@@ -162,20 +146,6 @@ function generateRaftId(){
 
     sed -i "s|RAFT_ID=''|RAFT_ID='${result}'|g" ../node_start.sh
     echo 'RAFT_ID='${result} >> node.conf
-
-    #Add Admin Peers
-    # result=`curl -X POST "http://${pMainIp}:${pMainPort}" -H "accept: application/json" -H "Content-Type: application/json" --data "{\"jsonrpc\":\"2.0\",\"method\":\"admin_addPeer\",\"params\":[\"${nodeId}\"],\"id\":2}"`
-    # echo "result: " $result
-    # result=$(echo $result | awk -F ":|}| " '{print $4}')
-	# echo "admin_addPeer result: " $result
-
-    # if [ "$result" = true ];
-    #     then
-    #         echo "peer added successfully!"
-    #     else
-    #         echo "peer not added"
-    #         #exit 1
-    # fi
 }
 
 function addPeers(){
