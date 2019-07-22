@@ -85,7 +85,6 @@ function createSetupConf(){
 function generateEnode(){
 
     cp priv nodekey
-    bootnode -genkey nodekey
     Enode="enode://"$(bootnode -nodekey nodekey -verbosity 9 -writeaddress)"@"
     mv nodekey geth/.
     cp ../../template/static-nodes_template_raft.json static-nodes.json
