@@ -132,9 +132,93 @@ function executeInit(){
     geth --datadir ./node init ./genesis.json
 }
 
+function networkReadParameters() {
+  POSITIONAL=()
+  while [[ $# -gt 0 ]]
+  do
+
+      key="$1"
+
+      case $key in
+          --nn|--name)
+          mNode="$2"
+          shift # past argument
+          shift # past value
+          ;;
+          --ni|--id)
+          chainId="$2"
+          shift # past argument
+          shift # past value
+          ;;
+          --nt|--ntype)
+          nodeType="$2"
+          shift # past argument
+          shift # past value
+          ;;
+          --ip)
+          pCurrentIp="$2"
+          shift # past argument
+          shift # past value
+          ;;
+          --r|--rpc)
+          rPort="$2"
+          shift # past argument
+          shift # past value
+          ;;
+          --w|--whisper)
+          wPort="$2"
+          shift # past argument
+          shift # past value
+          ;;
+          --t|--tessera)
+          tPort="$2"
+          shift # past argument
+          shift # past value
+          ;;
+          --dt|--dtessera)
+          dPort="$2"
+          shift # past argument
+          shift # past value
+          ;;
+          --ws)
+          wsPort="$2"
+          shift # past argument
+          shift # past value
+          ;;
+          *)    # unknown option
+          POSITIONAL+=("$1") # save it in an array for later
+          shift # past argument
+          ;;
+      esac
+  done
+  set -- "${POSITIONAL[@]}" # restore positional parameters
+
+  if [[ -z "$mNode" && -z "$chainId" && -z "$nodeType" && -z "$pCurrentIp" && -z "$rPort" && -z "$wPort" && -z "$tPort" && -z "$dPort" && -z "$wsPort" && -z "$networkName" ]]; then
+      return
+  fi
+
+  if [[ -z "$mNode" || -z "$chainId" || -z "$nodeType" || -z "$pCurrentIp" || -z "$rPort" || -z "$wPort" || -z "$tPort" || -z "$dPort" || -z "$wsPort" || -z "$networkName" ]]; then
+      help
+  fi
+
+  NETWORK_NON_INTERACTIVE=true
+}
+
 function main(){    
 
-    mNode="$nodeName" 
+    networkReadParameters $@
+
+    if [ -z "$NETWORK_NON_INTERACTIVE" ]; then
+        getInputWithDefault 'Please enter network id' 1101 chainId $BLUE
+        getInputWithDefault 'Please enter node name' "" mNode $BLUE
+        getInputWithDefault 'Please enter node type authority y/n' "y" nodeType $GREEN
+        getInputWithDefault 'Please enter IP Address of this node' "127.0.0.1" pCurrentIp $PINK
+        getInputWithDefault 'Please enter RPC Port of this node' 22000 rPort $PINK
+        getInputWithDefault 'Please enter Network Listening Port of this node' $((rPort+1)) wPort $GREEN
+        getInputWithDefault 'Please enter Tessera Port of this node' $((wPort+1)) tPort $GREEN
+        getInputWithDefault 'Please enter Tessera debug Port of this node' $((tPort+1)) dPort $GREEN
+        getInputWithDefault 'Please enter WS Port of this node' $((dPort+1)) wsPort $GREEN
+    fi 
 
     cleanup
     generateKeyPair
