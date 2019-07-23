@@ -11,11 +11,11 @@ function networkReadParameters() {
         key="$1"
 
         case $key in
-          create)
+          --create|create)
             option="1"
             shift # past argument
             ;;
-          join)
+          --join|join)
             option="2"
             shift # past argument
             ;;
@@ -59,13 +59,13 @@ function main() {
 	case $createOrJoin in
 		1)
           echo -e $YELLOW'Creating your IBFT network \n'
-					ibft/create_network.sh
+					ibft/create_network.sh $@
 					cd $(cat .nodename)
 					./node_start.sh $@;;
 					#tail -f /dev/null $@;;
 		2)
           echo -e $YELLOW'joining to the existing IBFT network \n'
-					ibft/join_network.sh
+					ibft/join_network.sh $@
 					cd $(cat .nodename)
 					./node_start.sh $@;;
 					#tail -f /dev/null $@;;

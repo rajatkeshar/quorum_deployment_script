@@ -87,14 +87,12 @@ function generateEnode(){
     cp priv nodekey
     Enode="enode://"$(bootnode -nodekey nodekey -verbosity 9 -writeaddress)"@"
     mv nodekey geth/.
-    cp ../../template/static-nodes_template_raft.json static-nodes.json
+    cp ../../template/static-nodes_template_ibft.json static-nodes.json
     PATTERN="s|#eNode#|${Enode}|g"
     sed -i $PATTERN static-nodes.json
     PATTERN="s|#CURRENT_IP#|${pCurrentIp}|g"
     sed -i $PATTERN static-nodes.json
     PATTERN="s|#W_PORT#|${wPort}|g"
-    sed -i $PATTERN static-nodes.json
-    PATTERN="s|#raftPprt#|${raPort}|g"
     sed -i $PATTERN static-nodes.json
     peerEnode=${Enode}${pCurrentIp}":"${wPort}"?discport=0"
     echo "peerEnode: " $peerEnode
@@ -141,6 +139,11 @@ function networkReadParameters() {
       case $key in
           --nn|--name)
           mNode="$2"
+          shift # past argument
+          shift # past value
+          ;;
+          --pw)
+          wPassword="$2"
           shift # past argument
           shift # past value
           ;;
@@ -192,11 +195,11 @@ function networkReadParameters() {
   done
   set -- "${POSITIONAL[@]}" # restore positional parameters
 
-  if [[ -z "$mNode" && -z "$chainId" && -z "$nodeType" && -z "$pCurrentIp" && -z "$rPort" && -z "$wPort" && -z "$tPort" && -z "$dPort" && -z "$wsPort" && -z "$networkName" ]]; then
+  if [[ -z "$mNode" && -z "$wPassword" && -z "$chainId" && -z "$nodeType" && -z "$pCurrentIp" && -z "$rPort" && -z "$wPort" && -z "$tPort" && -z "$dPort" && -z "$wsPort" ]]; then
       return
   fi
 
-  if [[ -z "$mNode" || -z "$chainId" || -z "$nodeType" || -z "$pCurrentIp" || -z "$rPort" || -z "$wPort" || -z "$tPort" || -z "$dPort" || -z "$wsPort" || -z "$networkName" ]]; then
+  if [[ -z "$mNode" || -z "$wPassword" || -z "$chainId" || -z "$nodeType" || -z "$pCurrentIp" || -z "$rPort" || -z "$wPort" || -z "$tPort" || -z "$dPort" || -z "$wsPort" ]]; then
       help
   fi
 
@@ -209,7 +212,8 @@ function main(){
 
     if [ -z "$NETWORK_NON_INTERACTIVE" ]; then
         getInputWithDefault 'Please enter network id' 1101 chainId $BLUE
-        getInputWithDefault 'Please enter node name' "" mNode $BLUE
+        getInputWithDefault 'Please enter node name' "node1" mNode $BLUE
+        getInputWithDefault 'Please enter password for wallet' "" wPassword $BLUE
         getInputWithDefault 'Please enter node type validator y/n' "y" nodeType $GREEN
         getInputWithDefault 'Please enter IP Address of this node' "127.0.0.1" pCurrentIp $PINK
         getInputWithDefault 'Please enter RPC Port of this node' 22000 rPort $PINK
