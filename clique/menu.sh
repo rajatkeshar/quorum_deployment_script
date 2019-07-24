@@ -11,11 +11,11 @@ function networkReadParameters() {
         key="$1"
 
         case $key in
-          create)
+          --create|create)
             option="1"
             shift # past argument
             ;;
-          join)
+          --join|join)
             option="2"
             shift # past argument
             ;;
@@ -59,13 +59,13 @@ function main() {
 	case $createOrJoin in
 		1)
             echo -e $YELLOW'Creating your Clique POA network \n'
-			clique/create_network.sh
+			clique/create_network.sh $@
 			cd $(cat .nodename)
 			./node_start.sh $@;;
 			#tail -f /dev/null $@;;
 		2)
             echo -e $YELLOW'joining to the existing network \n'
-			clique/join_network.sh
+			clique/join_network.sh $@
 			cd $(cat .nodename)
 			./node_start.sh $@;;
 			#tail -f /dev/null $@;;
