@@ -14,13 +14,13 @@ function call() {
 			./node_start.sh $@;;
 			#tail -f /dev/null $@;;
 		2)
-      		echo -e $YELLOW"joining to the existing network \n"
+      		echo -e $YELLOW"joining to the existing $consensus network \n"
 			$consensus/join_network.sh $@
 			cd $(cat .nodename)
 			./node_start.sh $@;;
 			#tail -f /dev/null $@;;
 		3)
-			echo -e $YELLOW"Creating Your Development/Test Network \n"
+			echo -e $YELLOW"Creating Your Development/Test Network with $consensus consensus \n"
 			$consensus/create_dev_network.sh $@;;
             #tail -f /dev/null $@;;
 		4)
