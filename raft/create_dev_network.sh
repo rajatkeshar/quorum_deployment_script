@@ -11,13 +11,13 @@ function createOrJoin() {
 		if [[ "node"${node_no} != "node1" ]]
 		then
             echo -e $CYAN"Configuring node${node_no}"$COLOR_END
-			${globalDir}/raft/join_network.sh --id 1101 --nn "node"${node_no} --pw "node"${node_no} --ip 0.0.0.0 --mip 0.0.0.0 --mport 22000 --r ${port_no} --w $((port_no + 1))  --t $((port_no + 2)) --dt $((port_no + 3)) --raft $((port_no + 4)) --ws $((port_no + 5)) 
+			${globalDir}/raft/join_network.sh --id 1101 --nn "node"${node_no} --pw "node"${node_no} --ip ${pCurrentIp} --mip ${pCurrentIp} --mport 22000 --r ${port_no} --w $((port_no + 1))  --t $((port_no + 2)) --dt $((port_no + 3)) --raft $((port_no + 4)) --ws $((port_no + 5)) 
             cd "node"${node_no}
             ./node_start.sh
             cd ../
         else
             echo -e $CYAN"Configuring node${node_no}"$COLOR_END
-            ${globalDir}/raft/create_network.sh --id 1101 --nn "node"${node_no} --pw "node"${node_no} --ip 0.0.0.0 --r ${port_no} --w $((port_no + 1))  --t $((port_no + 2)) --dt $((port_no + 3)) --raft $((port_no + 4)) --ws $((port_no + 5))
+            ${globalDir}/raft/create_network.sh --id 1101 --nn "node"${node_no} --pw "node"${node_no} --ip ${pCurrentIp} --r ${port_no} --w $((port_no + 1))  --t $((port_no + 2)) --dt $((port_no + 3)) --raft $((port_no + 4)) --ws $((port_no + 5))
             cd "node"${node_no}
             ./node_start.sh
             cd ../
@@ -40,7 +40,6 @@ function cleanup(){
     echo 'node_number=1' >> ${networkName}/network.conf
     cp variables $networkName
     cd ${networkName}
-    #cd ${mNode}/node/
 }
 
 function readParameters() {
@@ -57,6 +56,11 @@ function readParameters() {
             ;;
             --nc|--nodecount)
             nodeCount="$2"
+            shift # past argument
+            shift # past value
+            ;;
+            --ip)
+            pCurrentIp="$2"
             shift # past argument
             shift # past value
             ;;
@@ -81,11 +85,11 @@ function readParameters() {
     done
     set -- "${POSITIONAL[@]}" # restore positional parameters
 
-    if [[ -z "$networkName" && -z "$nodeCount" ]]; then
+    if [[ -z "$networkName" && -z "$nodeCount" && -z "$pCurrentIp" ]]; then
         return
     fi
 
-    if [[ -z "$networkName" || -z "$nodeCount" ]]; then
+    if [[ -z "$networkName" || -z "$nodeCount" || -z "$pCurrentIp" ]]; then
         help
     fi
 
@@ -99,6 +103,7 @@ function main(){
     if [ -z "$NON_INTERACTIVE" ]; then
         getInputWithDefault 'Please enter a network name' "TestNetwork" networkName $RED
         getInputWithDefault 'Please enter number of nodes to be created' 3 nodeCount $GREEN
+        getInputWithDefault 'Please enter IP Address of this network' "127.0.0.1" pCurrentIp $PINK
     fi
    
     echo -e $BLUE'Creating '$networkName' with '$nodeCount' nodes. Please wait... '$COLOR_END

@@ -32,12 +32,12 @@ function getvalidators() {
 
 #function to create start node script
 function copyScripts(){
-    cp ../../template/genesis_template_ibft.json ../genesis.json
+    cp ${globalDir}/template/genesis_template_ibft.json ../genesis.json
     sed -i "s|#CHAIN_ID#|${chainId}|g" ../genesis.json
     sed -i "s|#EXTRA_DATA#|${acc_validators}|g" ../genesis.json
 
-    cp ../../template/tessera_start_template.sh ../tessera_start.sh
-    cp ../../template/node_start_template_ibft.sh ../node_start.sh
+    cp ${globalDir}/template/tessera_start_template.sh ../tessera_start.sh
+    cp ${globalDir}/template/node_start_template_ibft.sh ../node_start.sh
 
     echo ${password} > ../password.txt
 
@@ -66,7 +66,7 @@ function generateTesseraConfig(){
 
     printf "\n\n" | java -jar $tesseraJar -keygen -filename $(pwd)/tesseraConfig/
 
-    ../../template/tessera_init_template.sh ${mNode} ${tPort}
+    ${globalDir}/template/tessera_init_template.sh ${mNode} ${tPort}
 }
 
 #create setup
@@ -89,7 +89,7 @@ function generateEnode(){
     cp priv nodekey
     Enode="enode://"$(bootnode -nodekey nodekey -verbosity 9 -writeaddress)"@"
     mv nodekey geth/.
-    cp ../../template/static-nodes_template_ibft.json static-nodes.json
+    cp ${globalDir}/template/static-nodes_template_ibft.json static-nodes.json
     PATTERN="s|#eNode#|${Enode}|g"
     sed -i $PATTERN static-nodes.json
     PATTERN="s|#CURRENT_IP#|${pCurrentIp}|g"
