@@ -213,7 +213,7 @@ function main(){
 
     if [ -z "$NETWORK_NON_INTERACTIVE" ]; then
         getInputWithDefault 'Please enter network id' 1101 chainId $BLUE
-        getInputWithDefault 'Please enter node name' "" mNode $BLUE
+        getInputWithDefault 'Please enter node name' "node1" mNode $BLUE
         getInputWithDefault 'Please enter password for wallet' "" wPassword $BLUE
         getInputWithDefault 'Please enter node type authority y/n' "y" nodeType $GREEN
         getInputWithDefault 'Please enter IP Address of this node' "127.0.0.1" pCurrentIp $PINK
