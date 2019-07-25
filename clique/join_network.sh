@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source variables
-source clique/common.sh
+source ${globalDir}/common.sh
 
 tesseraJar=($TESSERA_JAR)
 

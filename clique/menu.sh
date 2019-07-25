@@ -2,7 +2,7 @@
 
 #Menu system for launching appropriate scripts based on user choice
 source variables
-source clique/common.sh
+source ${globalDir}/common.sh
 
 function networkReadParameters() {
     POSITIONAL=()
