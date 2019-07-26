@@ -51,26 +51,35 @@ function copyScripts(){
     sed -i "s|#mNodeAddress#|${acc_signers}|g" ../genesis.json
     
     cp ${globalDir}/template/tessera_start_template.sh ../tessera_start.sh   
-    cp ${globalDir}/template/node_start_template_clique.sh ../node_start.sh
-
-    echo ${password} > ../password.txt
-    
     sed -i "s/#DPORT/${dPort}/g" ../tessera_start.sh
     sed -i "s/#NODE/'${mNode}'/g" ../tessera_start.sh
+    
+    cp ${globalDir}/template/node_start_template_clique.sh ../node_start.sh
     sed -i "s/#NODE/'${mNode}'/g" ../node_start.sh
     
     if [ "$nodeType" = 'y' ];
     then
         sed -i "s|authorityNode=''|authorityNode='${nodeType}'|g" ../node_start.sh
     fi
-
     NETWORK_ID=$(cat ../genesis.json | grep chainId | awk -F " " '{print $2}' | awk -F "," '{print $1}')
 
     ARGS="--nodiscover --networkid $NETWORK_ID --syncmode full --mine --minerthreads 1 --rpc --rpcaddr 0.0.0.0 --rpcapi admin,db,eth,debug,miner,net,shh,txpool,personal,web3,quorum,clique"
 
     pattern="--rpcport ${rPort} --port ${wPort}"
-
     sed -i "s/#STARTCMD/${pattern}/g" ../node_start.sh
+
+    echo ${password} > ../password.txt
+    
+}
+
+#function to rotate logs
+function logRotate() {
+    cp ${globalDir}/template/logrotate.conf ../logrotate.conf
+    sed -i "s|#LOG_PWD#|${PWD%/*}|g" ../logrotate.conf
+    
+    crontab -l >crontab.tmp
+    printf '%s\n' "*/30 * * * * /usr/sbin/logrotate ${PWD%/*}/logrotate.conf  --state ${PWD%/*}/logrotate-state" >> crontab.tmp
+    crontab crontab.tmp && rm -f crontab.tmp 
 }
 
 #function to gconfigure tessera
@@ -339,6 +348,7 @@ function main(){
     createSetupConf
     getSigners
     copyScripts
+    logRotate
     generateTesseraConfig
     addPeers
     addAuthorityNode

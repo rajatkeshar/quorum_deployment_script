@@ -24,7 +24,6 @@ function copyScripts(){
 
     cp ${globalDir}/template/genesis_template_ibft.json ../genesis.json
     sed -i "s|#CHAIN_ID#|${chainId}|g" ../genesis.json
-
     acc_address=${acc_address#"0x"}
     sed -i "s|#EXTRA_DATA#|${acc_address}|g" ../genesis.json
 
@@ -36,12 +35,10 @@ function copyScripts(){
     # sed -i "s|#EXTRA_DATA#|${extraData}|g" ../genesis.json
 
     cp ${globalDir}/template/tessera_start_template.sh ../tessera_start.sh
-    cp ${globalDir}/template/node_start_template_ibft.sh ../node_start.sh
-
-    echo ${password} > ../password.txt
-
     sed -i "s/#DPORT/${dPort}/g" ../tessera_start.sh
     sed -i "s/#NODE/'${mNode}'/g" ../tessera_start.sh
+
+    cp ${globalDir}/template/node_start_template_ibft.sh ../node_start.sh
     sed -i "s/#NODE/'${mNode}'/g" ../node_start.sh
     pattern="--rpcport ${rPort} --port ${wPort}"
     sed -i "s/#STARTCMD/${pattern}/g" ../node_start.sh
@@ -50,6 +47,18 @@ function copyScripts(){
 		then
 		    sed -i "s|validatorNode=''|validatorNode='$nodeType'|g" ../node_start.sh
 	fi
+
+    echo ${password} > ../password.txt
+}
+
+#function to rotate logs
+function logRotate() {
+    cp ${globalDir}/template/logrotate.conf ../logrotate.conf
+    sed -i "s|#LOG_PWD#|${PWD%/*}|g" ../logrotate.conf
+    
+    crontab -l >crontab.tmp
+    printf '%s\n' "*/30 * * * * /usr/sbin/logrotate ${PWD%/*}/logrotate.conf  --state ${PWD%/*}/logrotate-state" >> crontab.tmp
+    crontab crontab.tmp && rm -f crontab.tmp 
 }
 
 #function to gconfigure tessera
@@ -229,6 +238,7 @@ function main(){
     generateEnode
     createSetupConf
     copyScripts
+    logRotate
     generateTesseraConfig
     executeInit
 }
