@@ -49,6 +49,6 @@ PRIVATE_CONFIG=node/tesseraConfig/tm.ipc nohup geth --datadir node $ARGS #STARTC
 set +v
 
 echo
-echo "All nodes configured. See 'qdata/logs' for logs, and run e.g. 'geth attach node/geth.ipc' to attach to the first Geth node."
+echo "${node} configured. See '${node}/logs' for logs, and run e.g. 'geth attach ${node}/geth.ipc' to attach to the first Geth node."
 
 exit 0
