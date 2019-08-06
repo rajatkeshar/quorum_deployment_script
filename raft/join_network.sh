@@ -49,6 +49,7 @@ function copyScripts(){
 
 #function to rotate logs
 function logRotate() {
+    echo "[*] Log Rotation configuration"
     cp ${globalDir}/template/logrotate.conf ../logrotate.conf
     sed -i "s|#LOG_PWD#|${PWD%/*}|g" ../logrotate.conf
     
@@ -92,6 +93,7 @@ function createSetupConf(){
 
 #function to generate enode
 function generateEnode(){
+    echo "[*] Generating node configuration"
     bootnode -genkey nodekey
 	Enode="enode://"$(bootnode -nodekey nodekey -verbosity 9 -writeaddress)"@"
     mv nodekey geth/.
@@ -110,7 +112,6 @@ function generateEnode(){
 
 #function to create node accout and append it into genesis.json file
 function createAccount(){
-
     echo "[*] Creating account using generated keys and user password"
     # import the private key to geth and create a account
     current_pwd=$(pwd)
