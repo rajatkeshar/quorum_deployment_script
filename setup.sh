@@ -36,6 +36,7 @@ function init() {
 
 	echo -e $WHITE'\nStart deployment quorum Network, Built on version 2.2.1\n'
     echo globalDir=$(pwd) > variables
+    echo TESSERA_JAR=$TESSERA_JAR >> variables
 }
 
 function variableConf() {

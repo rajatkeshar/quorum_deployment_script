@@ -53,6 +53,7 @@ function pack(){
     sudo apt-get install -y maven
     sudo apt-get install -y openjdk-8-jdk 
     sudo apt-get install -y python-pip
+    sudo apt-get install -y monit
 }
 
 function install_java(){

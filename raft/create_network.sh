@@ -45,6 +45,10 @@ function copyScripts(){
     fi
     sed -i "s/#STARTCMD/${pattern}/g" ../node_start.sh
 
+    cp ${globalDir}/template/node_stop_template.sh ../node_stop.sh
+    sed -i "s/#TESSERA_PORT/'${dPort}'/g" ../node_stop.sh
+    sed -i "s/#RAFT_PORT/'${raPort}'/g" ../node_stop.sh
+
     echo ${wPassword} > ../password.txt
 }
 
@@ -57,6 +61,16 @@ function logRotate() {
     crontab -l >crontab.tmp
     printf '%s\n' "*/30 * * * * /usr/sbin/logrotate ${PWD%/*}/logrotate.conf  --state ${PWD%/*}/logrotate-state" >> crontab.tmp
     crontab crontab.tmp && rm -f crontab.tmp 
+}
+
+#function to configure monit
+function monitConfigration() {
+    echo "[*] Monit configuration"
+    cp ${globalDir}/template/monitrc_template ../monitrc
+    sed -i "s|#NODE_PID#|${PWD%/*}/node1.pid|g" ../monitrc
+    sed -i "s|#NODE_START_CMD#|${PWD%/*}/node_start.sh|g" ../monitrc
+    sed -i "s|#NODE_STOP_CMD#|${PWD%/*}/node_stop.sh|g" ../monitrc
+    cp ${PWD%/*}/monitrc /etc/monit/monitrc
 }
 
 #function to gconfigure tessera
@@ -249,6 +263,7 @@ function main(){
     createSetupConf
     copyScripts
     logRotate
+    monitConfigration
     generateTesseraConfig
     executeInit
 }

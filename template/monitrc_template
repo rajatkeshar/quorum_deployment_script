@@ -1,0 +1,93 @@
+###############################################################################
+## Monit control file
+###############################################################################
+#
+##
+## Start Monit in the background (run as a daemon):
+#
+  set daemon 120            # check services at 2-minute intervals
+#
+## Set syslog logging. If you want to log to a standalone log file instead,
+## specify the full path to the log file
+#
+  set log /var/log/monit.log
+#
+# set idfile /var/.monit.id
+  set idfile /var/lib/monit/id
+#
+#
+  set statefile /var/lib/monit/state
+#
+#
+  set mailserver smtp.gmail.com port 587 ,               # primary mailserver
+  username monit@eleven01.io password "monit@E01"
+  using TLSv1 with timeout 30 seconds
+#
+  set eventqueue
+      basedir /var/lib/monit/events # set the base directory where events will be stored
+      slots 100                     # optionally limit the queue size
+#
+## Monit by default uses the following format for alerts if the mail-format
+## statement is missing::
+## --8<--
+ set mail-format {
+   from:    Monit <monit@eleven01.io>
+   subject: monit alert --  $EVENT $SERVICE
+   message: $EVENT Service $SERVICE
+                 Date:        $DATE
+                 Action:      $ACTION
+                 Host:        $HOST
+                 Description: $DESCRIPTION
+
+            Your faithful employee,
+            Monit
+ }
+## --8<--
+#
+set alert rajat@eleven01.io not on { instance, action }
+set alert suresh@eleven01.io not on { instance, action }
+set alert prernaa@eleven01.io not on { instance, action }
+#
+## enable SSL for the HTTP interface.
+    set httpd port 8011 and
+        use address 0.0.0.0  # only accept connection from localhost
+        allow 0.0.0.0/0.0.0.0        # allow localhost to connect to the server and
+        allow admin:"Eleven@12345"      # require user 'admin' with password 'monit'
+        #with ssl {            # enable SSL/TLS and set path to server certificate
+            #pemfile: /etc/ssl/certs/monit.pem 
+        #}
+#
+###############################################################################
+## Services
+###############################################################################
+##
+## Check general system resources such as load average, cpu and memory
+## usage. Each test specifies a resource, conditions and the action to be
+## performed should a test fail.
+#
+  check system $HOST
+    if loadavg (1min) > 4 then alert
+    if loadavg (5min) > 2 then alert
+    if cpu usage > 95% for 10 cycles then alert
+    if memory usage > 75% then alert
+    if swap usage > 25% then alert
+#
+## Check custom program status output.
+#
+#  check program myscript with path /usr/local/bin/myscript.sh
+#    if status != 0 then alert
+#
+   check process node1 with pidfile #NODE_PID#
+   start program = "#NODE_START_CMD#" with timeout 120 seconds
+   stop program = "#NODE_STOP_CMD#"
+#
+###############################################################################
+## Includes
+###############################################################################
+##
+## It is possible to include additional configuration parts from other files or
+## directories.
+#
+   include /etc/monit/conf.d/*
+   include /etc/monit/conf-enabled/*
+#

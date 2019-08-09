@@ -11,6 +11,7 @@ set -e
 
 node=#NODE
 authorityNode=''
+cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 NETWORK_ID=$(cat genesis.json | grep chainId | awk -F " " '{print $2}' | awk -F "," '{print $1}')
 
 if [[ $NETWORK_ID -eq 1  || $NETWORK_ID -eq 2 || $NETWORK_ID -eq 3 || $NETWORK_ID -eq 4 || $NETWORK_ID -eq 8 || $NETWORK_ID -eq 42 || $NETWORK_ID -eq 77 || $NETWORK_ID -eq 99 || $NETWORK_ID -eq 7762959 || $NETWORK_ID -eq 61717561 ]];
