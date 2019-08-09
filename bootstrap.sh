@@ -95,8 +95,8 @@ function install_go(){
     rm -f $GOREL
     PATH=$PATH:/usr/local/go/bin
     echo 'PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc
-    echo "export GOPATH=${PWD}/testnet/build/_workspace" >> ~/.bashrc
-    export GOPATH=${PWD}/testnet/build/_workspace
+    echo "export GOPATH=${PWD}/go/build/_workspace" >> ~/.bashrc
+    export GOPATH=${PWD}/go/build/_workspace
     source ~/.profile
     source ~/.bashrc
 }
