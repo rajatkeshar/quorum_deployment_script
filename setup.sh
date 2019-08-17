@@ -11,7 +11,8 @@ function call() {
       		echo -e $YELLOW"Creating your $consensus network \n"
 			$consensus/create_network.sh $@
 			cd $(cat .nodename)
-			./node_start.sh $@;;
+			./node_start.sh $@
+            startMonit $@;;
 			#tail -f /dev/null $@;;
 		2)
       		echo -e $YELLOW"joining to the existing $consensus network \n"
@@ -30,6 +31,15 @@ function call() {
 			echo -e $RED'Please enter a valid option'	;;
 	esac
     echo $WHITE
+}
+
+#function to start monit
+function startMonit(){
+  echo "[*] Starting Monit"
+  monit reload
+  monit -t
+  service monit restart
+  monit restart all
 }
 
 function init() {

@@ -32,7 +32,7 @@
 ## --8<--
  set mail-format {
    from:    Monit <monit@eleven01.io>
-   subject: monit alert --  $EVENT $SERVICE
+   subject: monit alert -- private_network  $EVENT $SERVICE
    message: $EVENT Service $SERVICE
                  Date:        $DATE
                  Action:      $ACTION
@@ -45,8 +45,8 @@
 ## --8<--
 #
 set alert rajat@eleven01.io not on { instance, action }
-set alert suresh@eleven01.io not on { instance, action }
-set alert prernaa@eleven01.io not on { instance, action }
+#set alert suresh@eleven01.io not on { instance, action }
+#set alert prernaa@eleven01.io not on { instance, action }
 #
 ## enable SSL for the HTTP interface.
     set httpd port 8011 and
@@ -56,6 +56,16 @@ set alert prernaa@eleven01.io not on { instance, action }
         #with ssl {            # enable SSL/TLS and set path to server certificate
             #pemfile: /etc/ssl/certs/monit.pem 
         #}
+#
+###############################################################################
+## Includes
+###############################################################################
+##
+## It is possible to include additional configuration parts from other files or
+## directories.
+#
+   include /etc/monit/conf.d/*
+   include /etc/monit/conf-enabled/*
 #
 ###############################################################################
 ## Services
@@ -80,14 +90,4 @@ set alert prernaa@eleven01.io not on { instance, action }
    check process node1 with pidfile #NODE_PID#
    start program = "#NODE_START_CMD#" with timeout 120 seconds
    stop program = "#NODE_STOP_CMD#"
-#
-###############################################################################
-## Includes
-###############################################################################
-##
-## It is possible to include additional configuration parts from other files or
-## directories.
-#
-   include /etc/monit/conf.d/*
-   include /etc/monit/conf-enabled/*
 #

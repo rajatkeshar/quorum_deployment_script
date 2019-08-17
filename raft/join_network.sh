@@ -20,6 +20,7 @@ function generateKeyPair(){
 
 #function to create start node script with --raft flag
 function copyScripts(){
+    echo "[*] Getting Ready For Deployment"
     cp ${globalDir}/template/genesis_template_raft.json ../genesis.json
     sed -i "s|#CHAIN_ID#|${chainId}|g" ../genesis.json
     #sed -i "s|#mNodeAddress#|${acc_address}|g" ../genesis.json
@@ -57,7 +58,7 @@ function logRotate() {
     cp ${globalDir}/template/logrotate.conf ../logrotate.conf
     sed -i "s|#LOG_PWD#|${PWD%/*}|g" ../logrotate.conf
     
-    crontab -l >crontab.tmp
+    crontab -l > crontab.tmp
     printf '%s\n' "*/30 * * * * /usr/sbin/logrotate ${PWD%/*}/logrotate.conf  --state ${PWD%/*}/logrotate-state" >> crontab.tmp
     crontab crontab.tmp && rm -f crontab.tmp 
 }
@@ -151,13 +152,14 @@ function cleanup(){
 
 # execute init script
 function executeInit(){
+    echo "[*] Initializing Node "${mNode}
     cd ..
     geth --datadir ./node init ./genesis.json
 }
 
 #generate raft id
 function generateRaftId(){
-
+    echo "[*] Generating Raft ID "
     nodeId=`sed 's/\[\|\]\|\"'//g static-nodes.json`
     echo ${nodeId}
 
@@ -172,7 +174,7 @@ function generateRaftId(){
 }
 
 function addPeers(){
-
+    echo "[*] Adding Peers"
     nodeId=`sed 's/\[\|\]\|\"'//g static-nodes.json`
     echo ${nodeId} 
 
@@ -207,7 +209,7 @@ function addPeers(){
 }
 
 function createPermissionedJsonFile() {
-
+    echo "[*] Configuring Permissioned JSON File "
     result=`curl -X POST "http://${pMainIp}:${pMainPort}" -H "accept: application/json" -H "Content-Type: application/json" --data "{\"jsonrpc\":\"2.0\",\"method\":\"raft_cluster\",\"params\":[],\"id\":2}"`
     echo $result
     echo $result | jq '.result'>temp.json
@@ -355,7 +357,7 @@ function main(){
     createSetupConf
     copyScripts
     logRotate
-    monitConfigration
+    #monitConfigration
     generateTesseraConfig
     generateRaftId
     addPeers
