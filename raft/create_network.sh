@@ -68,7 +68,8 @@ function logRotate() {
 function monitConfigration() {
     echo "[*] Monit configuration"
     cp ${globalDir}/template/monitrc_template ../monitrc
-    sed -i "s|#NODE_PID#|${PWD%/*}/node1.pid|g" ../monitrc
+    sed -i "s|#PROCESS_NAME#|${mNode}|g" ../monitrc
+    sed -i "s|#NODE_PID#|${PWD%/*}/${mNode}.pid|g" ../monitrc
     sed -i "s|#NODE_START_CMD#|${PWD%/*}/node_start.sh|g" ../monitrc
     sed -i "s|#NODE_STOP_CMD#|${PWD%/*}/node_stop.sh|g" ../monitrc
     cp ${PWD%/*}/monitrc /etc/monit/monitrc

@@ -66,11 +66,22 @@ function logRotate() {
 #function to configure monit
 function monitConfigration() {
     echo "[*] Monit configuration"
-    cp ${globalDir}/template/monitrc_template ../monitrc
-    sed -i "s|#NODE_PID#|${PWD%/*}/node1.pid|g" ../monitrc
-    sed -i "s|#NODE_START_CMD#|${PWD%/*}/node_start.sh|g" ../monitrc
-    sed -i "s|#NODE_STOP_CMD#|${PWD%/*}/node_stop.sh|g" ../monitrc
-    cp ${PWD%/*}/monitrc /etc/monit/monitrc
+    
+    process_id=`/bin/ps -fu $USER| grep "geth" | grep -v "grep" | awk '{print $2}'`
+    echo "existing geth process id: "$process_id
+    if [ "$process_id" ];
+    then
+        echo "check process ${mNode} with pidfile ${PWD%/*}/${mNode}.pid" >> /etc/monit/monitrc
+        echo "start program = \"${PWD%/*}/node_start.sh\" with timeout 120 seconds" >> /etc/monit/monitrc
+        echo "stop program = \"${PWD%/*}/node_stop.sh\"" >> /etc/monit/monitrc
+    else 
+        cp ${globalDir}/template/monitrc_template ../monitrc
+        sed -i "s|#PROCESS_NAME#|${mNode}|g" ../monitrc
+        sed -i "s|#NODE_PID#|${PWD%/*}/${mNode}.pid|g" ../monitrc
+        sed -i "s|#NODE_START_CMD#|${PWD%/*}/node_start.sh|g" ../monitrc
+        sed -i "s|#NODE_STOP_CMD#|${PWD%/*}/node_stop.sh|g" ../monitrc
+        cp ${PWD%/*}/monitrc /etc/monit/monitrc
+    fi
 }
 
 #function to gconfigure tessera
@@ -184,11 +195,11 @@ function addPeers(){
 	echo "admin_addPeer result: " $result
     
     if [ "$result" = true ];
-        then
-            echo "peer added successfully!"
-        else 
-            echo "peer not added"
-            #exit 1
+    then
+        echo "peer added successfully!"
+    else 
+        echo "peer not added"
+        #exit 1
     fi
     sleep 5
     result=`curl -X POST "http://${pMainIp}:${pMainPort}" -H "accept: application/json" -H "Content-Type: application/json" --data "{\"jsonrpc\":\"2.0\",\"method\":\"admin_peers\",\"params\":[],\"id\":2}"`
@@ -357,11 +368,11 @@ function main(){
     createSetupConf
     copyScripts
     logRotate
-    #monitConfigration
+    monitConfigration
     generateTesseraConfig
     generateRaftId
     addPeers
-    #createPermissionedJsonFile
+    createPermissionedJsonFile
     executeInit
 }
 

@@ -32,6 +32,14 @@ function createOrJoin() {
     done
 }
 
+#function to start monit
+function startMonit(){
+  echo "[*] Starting Monit"
+  monit reload
+  monit -t
+  service monit restart
+}
+
 function cleanup(){
     rm -rf ${networkName}
     echo $networkName > .networkName
@@ -110,7 +118,7 @@ function main(){
     
     cleanup
     createOrJoin
-    
+    #startMonit
     echo -e $GREEN'Network '$networkName' created successfully. Check '$networkName' directory'$COLOR_END
 }
 main $@

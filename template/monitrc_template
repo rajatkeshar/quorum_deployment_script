@@ -87,7 +87,7 @@ set alert rajat@eleven01.io not on { instance, action }
 #  check program myscript with path /usr/local/bin/myscript.sh
 #    if status != 0 then alert
 #
-   check process node1 with pidfile #NODE_PID#
+   check process #PROCESS_NAME# with pidfile #NODE_PID#
    start program = "#NODE_START_CMD#" with timeout 120 seconds
    stop program = "#NODE_STOP_CMD#"
 #

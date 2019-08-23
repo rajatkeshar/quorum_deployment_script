@@ -18,7 +18,8 @@ function call() {
       		echo -e $YELLOW"joining to the existing $consensus network \n"
 			$consensus/join_network.sh $@
 			cd $(cat .nodename)
-			./node_start.sh $@;;
+			./node_start.sh $@
+            startMonit $@;;
 			#tail -f /dev/null $@;;
 		3)
 			echo -e $YELLOW"Creating Your Development/Test Network with $consensus consensus \n"
