@@ -266,7 +266,7 @@ function main(){
     createSetupConf
     copyScripts
     logRotate
-    monitConfigration
+    #monitConfigration
     generateTesseraConfig
     executeInit
 }

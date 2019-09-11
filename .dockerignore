@@ -1,0 +1,16 @@
+
+# ignore .git and .cache folders
+.git
+.cache
+.nodename
+.networkName
+.gitignore
+jre-8u211-linux-x64.tar.gz
+istanbul
+env1
+env2
+go/
+tessera/
+qdata/
+README.md
+bootstrap.sh

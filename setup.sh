@@ -11,15 +11,15 @@ function call() {
       		echo -e $YELLOW"Creating your $consensus network \n"
 			$consensus/create_network.sh $@
 			cd $(cat .nodename)
-			./node_start.sh $@
-            startMonit $@;;
+			./node_start.sh $@;;
+            #startMonit $@;;
 			#tail -f /dev/null $@;;
 		2)
       		echo -e $YELLOW"joining to the existing $consensus network \n"
 			$consensus/join_network.sh $@
 			cd $(cat .nodename)
-			./node_start.sh $@
-            startMonit $@;;
+			./node_start.sh $@;;
+            #startMonit $@;;
 			#tail -f /dev/null $@;;
 		3)
 			echo -e $YELLOW"Creating Your Development/Test Network with $consensus consensus \n"
@@ -27,7 +27,7 @@ function call() {
             #tail -f /dev/null $@;;
 		4)
 			echo -e $YELLOW"Exit"
-			flagmain=false	;;
+			flagmain=false;;
 		*)
 			echo -e $RED'Please enter a valid option'	;;
 	esac

@@ -368,7 +368,7 @@ function main(){
     createSetupConf
     copyScripts
     logRotate
-    monitConfigration
+    #monitConfigration
     generateTesseraConfig
     generateRaftId
     addPeers

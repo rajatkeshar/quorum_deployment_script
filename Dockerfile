@@ -75,7 +75,7 @@ ENV GOPATH /go
 ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 
 COPY quorum ./quorum
-RUN cd /quorum && go get github.com/urfave/cli && \
+RUN cd /quorum && \
 	make geth bootnode && \
 	cp build/bin/geth /usr/local/bin/ && \
 	cp build/bin/bootnode /usr/local/bin/
